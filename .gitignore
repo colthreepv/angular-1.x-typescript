@@ -1,0 +1,18 @@
+# node
+node_modules/
+npm-debug.log
+
+# built packages
+*.zip
+build/
+nginx/
+nginx-vars.js
+js/
+
+# database
+level.db
+session.db
+
+# private data
+test-account.json
+config.json
