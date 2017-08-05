@@ -5,6 +5,7 @@ const git = require('git-rev-sync');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
@@ -51,6 +52,11 @@ const plugins = [
       context: '/'
     }
   }),
+  new HtmlWebpackPlugin({
+    template: './index.html',
+    inject: 'body',
+    hash: true,
+  }),
   // outputs a chunk for all the javascript libraries: angular & co
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
@@ -83,14 +89,14 @@ const browserLibs = [
 ];
 
 module.exports = {
-  devtool: isProd ? 'source-map' : 'module-inline-source-map',
+  devtool: isProd ? 'source-map' : 'inline-source-map',
   entry: {
     // main: path.join(__dirname, ENTRYPOINTS, 'main.js'),
     login: path.join(__dirname, ENTRYPOINTS, 'login.ts'),
     vendor: browserLibs
   },
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, 'build', 'src'),
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js',
     publicPath: '/build/',
   },
@@ -117,12 +123,13 @@ module.exports = {
    * Reference: http://webpack.github.io/docs/webpack-dev-server.html
    */
   devServer: {
-    stats: 'minimal',
+    contentBase: 'build',
+    // stats: 'minimal',
 
     // Open resources on the backend server while developing
     // Reference: http://webpack.github.io/docs/webpack-dev-server.html#proxy
     proxy: {
-      '/': {
+      '/api': {
         target: 'http://localhost:8000'
       }
     }
