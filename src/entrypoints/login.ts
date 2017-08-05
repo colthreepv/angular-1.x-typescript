@@ -1,22 +1,25 @@
 import '../../styles/index.scss';
 
-import { apiValidation, formApi } from '../shared/form-api';
+import * as angular from 'angular';
 
-import angular from 'angular';
-import api from '../shared/api';
-import home from '../login/index';
-import http from '../shared/http';
-import ngMessages from 'angular-messages';
-import uiRouter from 'angular-ui-router';
+// import api from '../shared/api';
+import { HomeConfig } from '../login/index';
 
-const directives = { apiValidation, formApi };
-const factories = { http, api };
+// import http from '../shared/http';
+// import ngMessages from 'angular-messages';
+// import uiRouter from 'angular-ui-router';
 
-if (process.env.NODE_ENV === 'development') Error.stackTraceLimit = Infinity;
-const app = angular.module('login', [uiRouter, ngMessages]);
+// import { apiValidation, formApi } from '../shared/form-api';
 
-angular.forEach(factories, (factory, name) => app.factory(name, factory));
-angular.forEach(directives, (directive, name) => app.directive(name, directive));
+
+// const directives = { apiValidation, formApi };
+// const factories = { http, api };
+
+// if (process.env.NODE_ENV === 'development') Error.stackTraceLimit = Infinity;
+const app = angular.module('login', []);
+
+// angular.forEach(factories, (factory, name) => app.factory(name, factory));
+// angular.forEach(directives, (directive, name) => app.directive(name, directive));
 app
   .config(config)
   .run(run);
@@ -34,5 +37,5 @@ function performance ($compileProvider) {
 function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider) {
   $locationProvider.html5Mode(true);
   $urlMatcherFactoryProvider.strictMode(false);
-  $stateProvider.state(home);
+  $stateProvider.state(HomeConfig);
 }

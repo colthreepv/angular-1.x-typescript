@@ -11,6 +11,8 @@ const isProd = env === 'production';
 
 const ENTRYPOINTS = 'src/entrypoints';
 
+console.log('isProd', isProd);
+
 // webpack is silly and doesn't tell you what is the name of your hashed bundles
 function webpackHashInfo () {
   this.plugin('done', function (statsData) {
@@ -51,8 +53,8 @@ const plugins = [
   }),
   // outputs a chunk for all the javascript libraries: angular & co
   new webpack.optimize.CommonsChunkPlugin({
-    name: 'common',
-    chunks: ['main', 'login'],
+    name: 'vendor',
+    chunks: ['vendor', 'login'],
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js'
   }),
   /**
@@ -77,32 +79,35 @@ if (isProd) { // add plugins in case we're in production
 
 const browserLibs = [
   'angular',
-  'angular-ui-router'
+  // 'angular-ui-router'
 ];
 
 module.exports = {
   devtool: isProd ? 'source-map' : 'module-inline-source-map',
   entry: {
     // main: path.join(__dirname, ENTRYPOINTS, 'main.js'),
-    login: path.join(__dirname, ENTRYPOINTS, 'login.js'),
-    // vendor: browserLibs
+    login: path.join(__dirname, ENTRYPOINTS, 'login.ts'),
+    vendor: browserLibs
   },
   output: {
     path: path.join(__dirname, 'build'),
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js',
-    publicPath: '/build/'
+    publicPath: '/build/',
+  },
+  resolve: {
+    extensions: ['.ts', '.js', '.json'],
   },
   module: {
     loaders: [
-      { test: /\.ts(x?)$/, use: ['ts-loader', 'babel'], exclude: /node_modules/ },
+      { test: /\.ts(x?)$/, use: ['babel-loader', 'ts-loader'], exclude: /node_modules/ },
       // es6 code
-      // { test: /.js$/, loader: ['babel?cacheDirectory'], exclude: /node_modules/ },
+      // { test: /.js$/, use: ['babel?cacheDirectory'], exclude: /node_modules/ },
       // html included from angular
-      { test: /.html$/, loader: 'html' },
+      { test: /.html$/, use: 'html-loader' },
       // scss - and only scss
-      { test: /\.scss$/, loader: extractSASS.extract({ fallbackLoader: 'style', loader: ['css?sourceMap', 'sass?sourceMap'] }) },
+      { test: /\.scss$/, use: extractSASS.extract({ fallback: 'style-loader', use: ['css-loader?sourceMap', 'sass-loader?sourceMap'] }) },
       // static assets
-      { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url?limit=30000&name=[name]-[hash].[ext]' }
+      { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, use: 'url-loader?limit=30000&name=[name]-[hash].[ext]' }
     ]
   },
   plugins,

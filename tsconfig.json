@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "sourceMap": true,
+    "module": "es2015",
+    "experimentalDecorators": true,
+    "outDir": "build",
+    "types": [
+      "angular"
+    ]
+  },
+  "exclude": [
+    "build",
+    "dist",
+    "dev",
+    "node_modules",
+    "reports"
+  ],
+  "version": "2.0.6"
+}

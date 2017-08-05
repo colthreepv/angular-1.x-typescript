@@ -1,3 +1,5 @@
+import { IComponentController, IComponentOptions } from 'angular';
+
 const template = `
 <div class="navbar navbar-default" ng-class="navbar.ajax && 'psycload'" role="navigation">
   <div class="navbar-header">
@@ -43,21 +45,21 @@ const template = `
 </div>
 `;
 
-function Controller ($state, http) {
-  var $ctrl = this;
+class NavBarController implements IComponentController {
+  public static $inject = ['$state', 'http'];
+  collapsed = true;
+  showMagnet = false;
+  ajax = false;
 
-  this.collapsed = true; // navbar starts collapsed
-  this.showMagnet = false;
+  constructor (public $state, public http) {}
+  $onInit () {
+    console.log('')
 
-  this.ajax = false;
-  http.onAjax(function (newStatus) {
-    $ctrl.ajax = newStatus;
-  });
+  }
 }
-Controller.$inject = ['$state', 'http'];
 
-export default {
-  url: '',
-  template,
-  controller: Controller
-};
+export default class NavBarComponent implements IComponentOptions {
+  url = '';
+  template = template;
+  controller = NavBarController;
+}
